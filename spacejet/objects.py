@@ -118,7 +118,7 @@ class Price(pygame.sprite.Sprite):
 class Score(pygame.sprite.Sprite):
     def __init__(self):
         super(Score, self).__init__()
-        self.myFont = pygame.font.SysFont("Times New Roman", 40)
+        self.myFont = pygame.font.Font(f"{FIGPATH}AtariClassic.ttf", 30)
         self.white = (255,255,255)
         self.score = 0
         ### pass a string to myFont.render
