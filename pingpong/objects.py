@@ -36,10 +36,10 @@ class Player(pygame.sprite.Sprite):
             self.rect.right = SCREEN_WIDTH
         
     
-    def updateRL(self, actions):
-        if actions[0]: #left
+    def updateRL(self, action):
+        if action == 0: #left
             self.rect.move_ip(-self.speed, 0)
-        if actions[1]: #right
+        else: #right
             self.rect.move_ip(self.speed, 0)
 
         # Keep player on the screen
@@ -69,7 +69,6 @@ class Ball(pygame.sprite.Sprite):
     # Move the sprite based on speed
     # Remove the sprite when it passes the left edge of the screen
     def update(self):
-        
         if self.rect.left < 0:
             self.xspeed *= -1
         if self.rect.right > SCREEN_WIDTH:

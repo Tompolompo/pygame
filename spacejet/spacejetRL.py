@@ -55,7 +55,7 @@ class Game():
         self.all_sprites.add(self.price)
         self.all_sprites.add(self.score)
 
-        self.running = True
+        self.done = False
         
         
     def step_game(self, actions):
@@ -97,7 +97,7 @@ class Game():
             self.player.kill()
             self.score.kill()
             self.price.kill()
-            self.running = False
+            self.done = True
 
         if pygame.sprite.collide_rect(self.player, self.price):
             self.score.update()
