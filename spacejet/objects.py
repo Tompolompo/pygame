@@ -1,6 +1,6 @@
 import pygame
 import random
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from spacejet.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 from pygame.locals import (
     RLEACCEL,
@@ -10,11 +10,12 @@ from pygame.locals import (
     K_RIGHT,
 ) 
 
+FIGPATH = "C:/Users/tomas/Desktop/summer projects/game/spacejet/figs/"
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.surf = pygame.image.load("figs/jet.png").convert()
+        self.surf = pygame.image.load(f"{FIGPATH}jet.png").convert()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(
             center=(
@@ -44,12 +45,35 @@ class Player(pygame.sprite.Sprite):
             self.rect.top = 0
         if self.rect.bottom >= SCREEN_HEIGHT:
             self.rect.bottom = SCREEN_HEIGHT
+    
+    def updateRL(self, actions):
+        if actions[0]: #up
+            self.rect.move_ip(0, -self.speed)
+        if actions[1]: #down
+            self.rect.move_ip(0, self.speed)
+        if actions[2]: #left
+            self.rect.move_ip(-self.speed, 0)
+        if actions[3]: #right
+            self.rect.move_ip(self.speed, 0)
+
+        # Keep player on the screen
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > SCREEN_WIDTH:
+            self.rect.right = SCREEN_WIDTH
+        if self.rect.top <= 0:
+            self.rect.top = 0
+        if self.rect.bottom >= SCREEN_HEIGHT:
+            self.rect.bottom = SCREEN_HEIGHT
+    
+
+
 
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super(Enemy, self).__init__()
-        self.surf = pygame.image.load("figs/missile.png").convert()
+        self.surf = pygame.image.load(f"{FIGPATH}missile.png").convert()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(
             center=(
@@ -71,7 +95,7 @@ class Price(pygame.sprite.Sprite):
         super(Price, self).__init__()
         self.height = 50
         self.width = 20
-        self.surf = pygame.image.load("figs/Banana.png").convert()
+        self.surf = pygame.image.load(f"{FIGPATH}banana.png").convert()
         self.surf = pygame.transform.scale(self.surf, (self.width, self.height))
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(
@@ -99,10 +123,10 @@ class Score(pygame.sprite.Sprite):
         self.score = 0
         ### pass a string to myFont.render
         self.surf = self.myFont.render(f"score: {self.score}", 1, self.white)
-        self.rect = self.surf.get_rect(left=0, top=0)
+        self.rect = self.surf.get_rect(left=10, top=10)
         
 
     def update(self):
         self.score += 1
         self.surf = self.myFont.render(f"score: {self.score}", 1, self.white)
-        self.rect = self.surf.get_rect(left=0, top=0)
+        self.rect = self.surf.get_rect(left=10, top=10)

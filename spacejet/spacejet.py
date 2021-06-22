@@ -1,16 +1,10 @@
 # imports
 import pygame
 import random
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FRAMERATE
-import objects
+from spacejet.settings import SCREEN_WIDTH, SCREEN_HEIGHT, FRAMERATE
+import spacejet.objects as objects
 import time
-
 from pygame.locals import (
-    RLEACCEL,
-    K_UP,
-    K_DOWN,
-    K_LEFT,
-    K_RIGHT,
     K_ESCAPE,
     KEYDOWN,
     QUIT,
