@@ -15,7 +15,7 @@ class Game():
         pygame.init()
 
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT)) 
-        self.clock = pygame.time.Clock()
+        #self.clock = pygame.time.Clock()
 
         # self.player = objects.Player()
         # self.ball = objects.Ball()
@@ -91,7 +91,7 @@ class Game():
         pygame.display.flip()
 
         # Ensure program maintains a rate of X frames per second
-        self.clock.tick(FRAMERATE)
+        #self.clock.tick(FRAMERATE)
 
         state = np.array([[
             self.player.rect.centerx, 

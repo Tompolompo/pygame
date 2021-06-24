@@ -12,7 +12,7 @@ FIGPATH = "C:/Users/tomas/Desktop/summer projects/game/pingpong/figs/"
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.surf = pygame.Surface((100, 20))
+        self.surf = pygame.Surface((SCREEN_WIDTH/2, 20))
         self.surf.fill((255, 255, 255))
         self.rect = self.surf.get_rect(
             center=(
@@ -82,7 +82,7 @@ class Ball(pygame.sprite.Sprite):
         return False
 
     def pong(self):
-        self.yspeed *= -1.1
+        self.yspeed *= -1.01
         if random.randint(0,1) == 0:
             self.xspeed += -1
         else:

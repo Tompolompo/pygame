@@ -10,7 +10,7 @@ import math
 class Agent(object):
     """The world's simplest agent!"""
     def __init__(self, action_space, gamma=1.0, epsilon=1.0, epsilon_min=0.01, epsilon_decay=0.96, alpha=0.01, alpha_decay=0.01, batch_size=64):
-        """ action =[left, right]"""
+        """ action =[left, right] """
         self.action_space = action_space # [left, right] left=0, right=1 {np.array([0,1])}
         self.memory = deque(maxlen=1000000) # saving history of episodes. used for training
         self.epsilon = epsilon # epsilon random
@@ -32,7 +32,7 @@ class Agent(object):
         self.model.compile(optimizer=optimizer, loss=loss)
 
     def choose_action(self, state, epsilon):
-        """ state = [racket x pos, ball x pos, ball y pos, ball x vel, ball y vel]"""
+        """ state = [racket x pos, ball x pos, ball y pos, ball x vel, ball y vel] """
         return np.random.choice(self.action_space) if (np.random.random() <= epsilon) else np.argmax(self.model.predict(state))
 
     def get_epsilon(self, t):
@@ -42,6 +42,7 @@ class Agent(object):
         self.memory.append((state, action, reward, next_state, done))
         
     def learn_post_episode(self):
+        #print(f"\tLearning post episode. memory = {len(self.memory)}")
         x_batch, y_batch = [], []
         minibatch = random.sample(self.memory, min(len(self.memory), self.batch_size))
         for state, action, reward, next_state, done in minibatch:
@@ -53,6 +54,7 @@ class Agent(object):
         # train model
         result = self.model.fit(np.array(x_batch), np.array(y_batch), len(x_batch), verbose=0)
         self.loss_history.append(result.history['loss'][0])
+        #print(f"\tLoss = {result.history['loss'][0]}")
         # update epsilon
         if self.epsilon > self.epsilon_min:
             self.epsilon*=self.epsilon_decay
