@@ -47,6 +47,7 @@ while running:
     # Update the player sprite based on user keypresses
     player.update(pressed_keys)
     dead = ball.update()
+
     if dead:
         player.kill()
         ball.kill()
@@ -60,6 +61,7 @@ while running:
     if pygame.sprite.collide_rect(player, ball):
         ball.pong() 
         score.update()
+        player.update_racket()
         
     # Update the display
     pygame.display.flip()

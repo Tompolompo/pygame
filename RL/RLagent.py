@@ -9,12 +9,13 @@ import math
 
 class Agent(object):
     """The world's simplest agent!"""
-    def __init__(self, action_space, gamma=1.0, epsilon=1.0, epsilon_min=0.01, epsilon_decay=0.96, alpha=0.01, alpha_decay=0.01, batch_size=64):
+    def __init__(self, action_space, gamma=1.0, epsilon=1.0, epsilon_min=0.01, epsilon_step_decay=0.9925, epsilon_episode_decay=0.98, alpha=0.01, alpha_decay=0.01, batch_size=64):
         """ action =[left, right] """
         self.action_space = action_space # [left, right] left=0, right=1 {np.array([0,1])}
         self.memory = deque(maxlen=1000000) # saving history of episodes. used for training
         self.epsilon = epsilon # epsilon random
-        self.epsilon_decay = epsilon_decay # decayrate for epsilon
+        self.epsilon_step_decay = epsilon_step_decay # decayrate for epsilon
+        self.epsilon_episode_decay = epsilon_episode_decay # decayrate for epsilon
         self.epsilon_min = epsilon_min # decays to min value
         self.batch_size = batch_size # batch size used for training
         self.gamma = gamma # discount rate for reward
@@ -35,8 +36,11 @@ class Agent(object):
         """ state = [racket x pos, ball x pos, ball y pos, ball x vel, ball y vel] """
         return np.random.choice(self.action_space) if (np.random.random() <= epsilon) else np.argmax(self.model.predict(state))
 
+    def choose_action_greedy(self, state):
+        return np.argmax(self.model.predict(state))
+
     def get_epsilon(self, t):
-        return max(self.epsilon_min, min(self.epsilon, 1.0 - math.log10((t + 1) * self.epsilon_decay)))
+        return max(self.epsilon_min, self.epsilon * self.epsilon_step_decay ** t)
     
     def remember(self, state, action, reward, next_state, done):
         self.memory.append((state, action, reward, next_state, done))
@@ -57,4 +61,4 @@ class Agent(object):
         #print(f"\tLoss = {result.history['loss'][0]}")
         # update epsilon
         if self.epsilon > self.epsilon_min:
-            self.epsilon*=self.epsilon_decay
+            self.epsilon *= self.epsilon_episode_decay

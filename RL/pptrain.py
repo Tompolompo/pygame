@@ -4,6 +4,8 @@ import pickle
 import time
 import numpy as np
 
+PATH_DATA = "RL/agents/"
+
 init_time_start = time.time()
 game = pingpongRL.Game()
 game.reset()
@@ -14,6 +16,8 @@ print(f"init time = {time.time()-init_time_start: .2f}")
 def train(agent, game, episodes=100):
     start_time = time.time()
     episode_time = 0
+    
+    file_name_time = time.strftime("%y%m%d_%H%M")
 
     for episode in range(episodes):
         episode_start_time = time.time()
@@ -27,7 +31,6 @@ def train(agent, game, episodes=100):
 
         i=0
         done=False
-        
         while not done:
 
             action_start_time = time.time()
@@ -63,13 +66,16 @@ def train(agent, game, episodes=100):
         overhead_time = episode_time - action_time - step_time - learn_time
         print(f"\tEpisode time = {episode_time: .2f}, action time = {action_time: .2f}, step time = {step_time: .2f}, learn_time = {learn_time: .2f}, overhead = {overhead_time: .1f}")
 
+        
+        pickle.dump(agent.memory, open(f'{PATH_DATA}mem{file_name_time}.p', 'wb'))
+        pickle.dump(agent.loss_history, open(f'{PATH_DATA}loss{file_name_time}.p', 'wb'))
+        pickle.dump(agent.scores, open(f'{PATH_DATA}scores{file_name_time}.p', 'wb'))
+        agent.model.save(f'{PATH_DATA}model')
+
+
     tot_time = time.time() - start_time  
 
     print(f"Total time = {tot_time: .2f}")          
 
-train(agent, game, episodes=500)
+train(agent, game, episodes=100)
 
-PATH = "RL/agents/"
-pickle.dump(agent.memory, open(f'{PATH}mem{time.strftime("%y%m%d_%H%M")}.p', 'wb'))
-pickle.dump(agent.loss_history, open(f'{PATH}loss{time.strftime("%y%m%d_%H%M")}.p', 'wb'))
-pickle.dump(agent.scores, open(f'{PATH}scores{time.strftime("%y%m%d_%H%M")}.p', 'wb'))

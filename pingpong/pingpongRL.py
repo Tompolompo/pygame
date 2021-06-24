@@ -83,6 +83,7 @@ class Game():
         if pygame.sprite.collide_rect(self.player, self.ball):
             self.ball.pong() 
             self.score.update()
+            self.player.update_racket()
             reward = 1
         else:
             reward = 0

@@ -1,6 +1,6 @@
 import pygame
 import random
-from pingpong.settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from pingpong.settings import  SCREEN_WIDTH, SCREEN_HEIGHT, BALL_YSPEED_INCREASE, BALL_YSPEED_MAX, BALL_YSPEED_START, RACKET_SPEED, RACKET_WIDTH_START, RACKET_WIDTH_MIN, RACKET_WIDTH_DECREASE
 from pygame.locals import (
     RLEACCEL,
     K_LEFT,
@@ -12,7 +12,8 @@ FIGPATH = "pingpong/figs/"
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.surf = pygame.Surface((SCREEN_WIDTH/2, 20))
+        self.racket_width = RACKET_WIDTH_START
+        self.surf = pygame.Surface((self.racket_width, 20))
         self.surf.fill((255, 255, 255))
         self.rect = self.surf.get_rect(
             center=(
@@ -47,6 +48,19 @@ class Player(pygame.sprite.Sprite):
             self.rect.left = 0
         if self.rect.right > SCREEN_WIDTH:
             self.rect.right = SCREEN_WIDTH
+
+    def update_racket(self):
+        x_pos = self.rect.centerx
+        self.racket_width = self.racket_width*RACKET_WIDTH_DECREASE if self.racket_width > RACKET_WIDTH_MIN else RACKET_WIDTH_MIN
+        self.surf = pygame.Surface((self.racket_width, 20))
+        self.surf.fill((255, 255, 255))
+        self.rect = self.surf.get_rect(
+            center=(
+                x_pos,
+                SCREEN_HEIGHT,
+            )
+        )
+
     
 
 class Ball(pygame.sprite.Sprite):
@@ -61,7 +75,7 @@ class Ball(pygame.sprite.Sprite):
             )
         )
         self.xspeed = random.randint(-5,5)
-        self.yspeed = 10
+        self.yspeed = BALL_YSPEED_START
 
     # Move the sprite based on speed
     # Remove the sprite when it passes the left edge of the screen
@@ -79,16 +93,19 @@ class Ball(pygame.sprite.Sprite):
         return False
 
     def pong(self):
-        self.yspeed *= -1.01
+        self.yspeed *= -BALL_YSPEED_INCREASE
+        if self.yspeed > BALL_YSPEED_MAX:
+            self.yspeed = BALL_YSPEED_MAX
+
         if random.randint(0,1) == 0:
             self.xspeed += -1
         else:
             self.xspeed += 1
 
-        if self.xspeed > 10:
-            self.xspeed = 10
-        elif self.xspeed < -10:
-            self.xspeed = -10
+        if self.xspeed > 20:
+            self.xspeed = 20
+        elif self.xspeed < -20:
+            self.xspeed = -20
 
 
 class Score(pygame.sprite.Sprite):
