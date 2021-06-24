@@ -18,9 +18,9 @@ class Agent(object):
         self.epsilon_min = epsilon_min # decays to min value
         self.batch_size = batch_size # batch size used for training
         self.gamma = gamma # discount rate for reward
-        self.win_ticks = 3 # av score to complete
-        self.loss_history = deque(maxlen=500)
-        self.scores = deque(maxlen=100)
+        self.win_ticks = 20 # av score to complete
+        self.loss_history = deque(maxlen=1000)
+        self.scores = deque(maxlen=1000)
         
         self.model = tf.keras.models.Sequential()
         self.model.add(tf.keras.layers.Dense(24, input_dim=5, activation='tanh')) # input the 5 dimensions of the state

@@ -67,8 +67,9 @@ def train(agent, game, episodes=100):
 
     print(f"Total time = {tot_time: .2f}")          
 
-train(agent, game, episodes=1)
+train(agent, game, episodes=500)
 
-#PATH = "C:/Users/tomas/Desktop/summer projects/game/RL/agents/"
 PATH = "RL/agents/"
-pickle.dump(agent.memory, open(f'{PATH}{time.strftime("%y%m%d_%H%M")}.p', 'wb'))
+pickle.dump(agent.memory, open(f'{PATH}mem{time.strftime("%y%m%d_%H%M")}.p', 'wb'))
+pickle.dump(agent.loss_history, open(f'{PATH}loss{time.strftime("%y%m%d_%H%M")}.p', 'wb'))
+pickle.dump(agent.scores, open(f'{PATH}scores{time.strftime("%y%m%d_%H%M")}.p', 'wb'))
