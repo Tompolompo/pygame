@@ -7,7 +7,7 @@ from pygame.locals import (
     K_RIGHT,
 ) 
 
-FIGPATH = "C:/Users/tomas/Desktop/summer projects/game/pingpong/figs/"
+FIGPATH = "pingpong/figs/"
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
