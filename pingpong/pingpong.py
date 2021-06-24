@@ -3,8 +3,6 @@ import random
 from pingpong.settings import SCREEN_WIDTH, SCREEN_HEIGHT, FRAMERATE
 import pingpong.objects as objects
 import time
-import os
-os.environ["SDL_VIDEODRIVER"] = "dummy"
 from pygame.locals import (
     K_ESCAPE,
     KEYDOWN,

@@ -15,7 +15,7 @@ class Game():
         pygame.init()
 
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT)) 
-        #self.clock = pygame.time.Clock()
+        self.clock = pygame.time.Clock()
 
         # self.player = objects.Player()
         # self.ball = objects.Ball()
@@ -102,3 +102,22 @@ class Game():
         ]])
 
         return state, reward, self.done
+
+    def playback(self, episode, framerate=FRAMERATE):
+
+        self.reset()
+
+        for state in episode:
+
+            self.player.rect.centerx = state[0]
+            self.ball.rect.centerx = state[1]
+            self.ball.rect.centery = state[2]
+
+            self.screen.fill((0, 0, 0))
+
+            for entity in self.all_sprites:
+                self.screen.blit(entity.surf, entity.rect)
+            
+            pygame.display.flip()
+
+            self.clock.tick(framerate)

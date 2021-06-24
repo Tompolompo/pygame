@@ -49,9 +49,6 @@ class Player(pygame.sprite.Sprite):
             self.rect.right = SCREEN_WIDTH
     
 
-
-
-
 class Ball(pygame.sprite.Sprite):
     def __init__(self):
         super(Ball, self).__init__()
