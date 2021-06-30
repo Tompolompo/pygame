@@ -1,3 +1,4 @@
+#from RL.pptrain import human_instruction
 import pygame
 import random
 from pingpong.settings import SCREEN_WIDTH, SCREEN_HEIGHT, FRAMERATE
@@ -8,6 +9,7 @@ from pygame.locals import (
     K_ESCAPE,
     KEYDOWN,
     QUIT,
+    K_RIGHT
 ) 
 
 class Game():
@@ -45,16 +47,26 @@ class Game():
     
     def initial_state(self):
         state = np.array([[
-            self.player.rect.centerx, 
+            self.player.rect.left,
+            self.player.rect.right, 
             self.ball.rect.centerx, 
             self.ball.rect.centery, 
             self.ball.xspeed, 
             self.ball.yspeed
         ]])
 
+        return self.scale_state(state)
+    
+    def scale_state(self, state):
+        state[0][0] /= SCREEN_WIDTH
+        state[0][1] /= SCREEN_WIDTH
+        state[0][2] /= SCREEN_WIDTH
+        state[0][3] /= SCREEN_HEIGHT
+        state[0][4] /= SCREEN_WIDTH
+        state[0][5] /= SCREEN_HEIGHT
         return state
 
-    def step_game(self, action):
+    def step_game(self, action=1, human_feedback=False):
 
         # for loop through the event queue
         for event in pygame.event.get():
@@ -66,6 +78,13 @@ class Game():
             # Check for QUIT event. If QUIT, then set running to false.
             elif event.type == QUIT:
                 self.running = False
+        
+        if human_feedback:
+            pressed_keys = pygame.key.get_pressed()
+            if pressed_keys[K_RIGHT] == 1:
+                action = 1
+            else:
+                action = 0
 
         # Update the player sprite based on user keypresses
         self.player.updateRL(action)
@@ -74,6 +93,7 @@ class Game():
             self.player.kill()
             self.ball.kill()
             self.done = True
+            reward = 0
 
         self.screen.fill((0, 0, 0))
 
@@ -84,9 +104,9 @@ class Game():
             self.ball.pong() 
             self.score.update()
             self.player.update_racket()
-            reward = 1
+            reward = 10
         else:
-            reward = 0
+            reward = 1 # OBS: TEST NON SPARSE REWARDS
             
         # Update the display
         pygame.display.flip()
@@ -95,16 +115,22 @@ class Game():
         #self.clock.tick(FRAMERATE)
 
         state = np.array([[
-            self.player.rect.centerx, 
+            self.player.rect.left,
+            self.player.rect.right, 
             self.ball.rect.centerx, 
             self.ball.rect.centery, 
             self.ball.xspeed, 
             self.ball.yspeed
         ]])
 
-        return state, reward, self.done
+        if human_feedback:
+            self.clock.tick(FRAMERATE)
+            return self.scale_state(state), reward, self.done, action
+        else:
+            return self.scale_state(state), reward, self.done
 
     def playback(self, episode, framerate=FRAMERATE):
+        # OBS UNSCALE DATA!!!
 
         self.reset()
 
