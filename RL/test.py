@@ -1,6 +1,12 @@
 import tensorflow as tf
 import timeit
 
+device_name = tf.test.gpu_device_name()
+print(device_name)
+if device_name != '/device:GPU:0':
+  raise SystemError('GPU device not found')
+print('Found GPU at: {}'.format(device_name))
+
 
 def cpu():
   with tf.device('/cpu:0'):
