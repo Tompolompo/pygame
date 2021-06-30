@@ -86,7 +86,7 @@ def train(agent, game, episodes=100):
 
         episode_time = time.time() - episode_start_time
         overhead_time = episode_time - action_time - step_time - learn_time
-        #print(f"\tEpisode time = {episode_time: .2f}, action time = {action_time: .2f}, step time = {step_time: .2f}, learn_time = {learn_time: .2f}, overhead = {overhead_time: .1f}")
+        print(f"\tEpisode time = {episode_time: .2f}, action time = {action_time: .2f}, step time = {step_time: .2f}, learn_time = {learn_time: .2f}, overhead = {overhead_time: .1f}")
 
         
         pickle.dump(agent.memory, open(f'{folder_name}/memory.p', 'wb'))
