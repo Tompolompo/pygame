@@ -50,19 +50,18 @@ class Agent(object):
         
     def learn_post_episode(self):
         #print(f"\tLearning post episode. memory = {len(self.memory)}")
-        with tf.device('/device:GPU:0'):
-            x_batch, y_batch = [], []
-            minibatch = random.sample(self.memory, min(len(self.memory), self.batch_size))
-            for state, action, reward, next_state, done in minibatch:
-                y_target = self.model.predict(state) # q value for action 0 and 1
-                y_target[0][action] = reward if done else self.gamma * np.max(self.model.predict(next_state)[0])
-                x_batch.append(state[0])
-                y_batch.append(y_target[0])
-                
-            # train model
-            result = self.model.fit(np.array(x_batch), np.array(y_batch), len(x_batch), verbose=0)
-            self.loss_history.append(result.history['loss'][0])
-            #print(f"\tLoss = {result.history['loss'][0]}")
-            # update epsilon
-            if self.epsilon > self.epsilon_min:
-                self.epsilon *= self.epsilon_episode_decay
+        x_batch, y_batch = [], []
+        minibatch = random.sample(self.memory, min(len(self.memory), self.batch_size))
+        for state, action, reward, next_state, done in minibatch:
+            y_target = self.model.predict(state) # q value for action 0 and 1
+            y_target[0][action] = reward if done else self.gamma * np.max(self.model.predict(next_state)[0])
+            x_batch.append(state[0])
+            y_batch.append(y_target[0])
+            
+        # train model
+        result = self.model.fit(np.array(x_batch), np.array(y_batch), len(x_batch), verbose=0)
+        self.loss_history.append(result.history['loss'][0])
+        #print(f"\tLoss = {result.history['loss'][0]}")
+        # update epsilon
+        if self.epsilon > self.epsilon_min:
+            self.epsilon *= self.epsilon_episode_decay

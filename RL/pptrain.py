@@ -4,6 +4,7 @@ import pickle
 import time
 import numpy as np
 import os
+import tensorflow as tf
 
 PATH_DATA = "RL/agents/"
 
@@ -127,5 +128,6 @@ def human_instruction(agent, game, episodes=1):
 
 # MAIN:
 #agent = human_instruction(agent, game)
-train(agent, game, episodes=100)
+with tf.device('/device:GPU:0'):
+    train(agent, game, episodes=100)
 
