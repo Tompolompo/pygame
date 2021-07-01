@@ -6,6 +6,17 @@ import numpy as np
 import os
 import tensorflow as tf
 
+print('************* STARTING PPTRAIN ***************')
+tf.debugging.set_log_device_placement(True)
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+a = tf.constant([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+b = tf.constant([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
+c = tf.matmul(a, b)
+
+print(c)
+
+print("*********************************************")
+
 PATH_DATA = "RL/agents/"
 
 init_time_start = time.time()
@@ -128,6 +139,9 @@ def human_instruction(agent, game, episodes=1):
 
 # MAIN:
 #agent = human_instruction(agent, game)
-with tf.device('/device:GPU:0'):
-    train(agent, game, episodes=100)
+#with tf.device('/device:GPU:0'):
+train(agent, game, episodes=1)
 
+print("*************** end of pptrain *****************")
+print("model:")
+print(agent.model)
