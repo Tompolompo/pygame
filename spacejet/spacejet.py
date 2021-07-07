@@ -17,7 +17,9 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 # Events
 ADDENEMY = pygame.USEREVENT + 1
 #ADDPRICE = pygame.USEREVENT + 2
-pygame.time.set_timer(ADDENEMY, random.randint(250,500))
+
+#pygame.time.set_timer(ADDENEMY, random.randint(250,500))
+
 #pygame.time.set_timer(ADDPRICE, 5000)
 
 
@@ -25,7 +27,7 @@ pygame.time.set_timer(ADDENEMY, random.randint(250,500))
 player = objects.Player()
 
 # Create groups to hold enemy sprites and all sprites
-enemies = pygame.sprite.Group()
+#enemies = pygame.sprite.Group()
 #prices = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
@@ -42,6 +44,8 @@ clock = pygame.time.Clock()
 
 running = True
 
+timeout = 0
+
 # Main loop
 while running:
     # for loop through the event queue
@@ -56,11 +60,11 @@ while running:
             running = False
 
         # Add a new enemy?
-        elif event.type == ADDENEMY:
-            # Create the new enemy and add it to sprite groups
-            new_enemy = objects.Enemy()
-            enemies.add(new_enemy)
-            all_sprites.add(new_enemy)
+        # elif event.type == ADDENEMY:
+        #     # Create the new enemy and add it to sprite groups
+        #     new_enemy = objects.Enemy()
+        #     #enemies.add(new_enemy)
+        #     all_sprites.add(new_enemy)
         
        # elif event.type == ADDPRICE:
             
@@ -75,7 +79,7 @@ while running:
     player.update(pressed_keys)
     
     # Update enemy position
-    enemies.update()
+    #enemies.update()
 
     # Fill the screen with black
     screen.fill((0, 0, 0))
@@ -85,15 +89,24 @@ while running:
         screen.blit(entity.surf, entity.rect)
 
     # Check if any enemies have collided with the player
-    if pygame.sprite.spritecollideany(player, enemies):
-        # If so, then remove the player and stop the loop
-        player.kill()
-        running = False
+
+    # if pygame.sprite.spritecollideany(player, enemies):
+    #     # If so, then remove the player and stop the loop
+    #     player.kill()
+    #     running = False
 
 
     if pygame.sprite.collide_rect(player, price):
         score.update()
         price.update()
+        timeout = 0
+    else:
+        timeout += 1
+    
+    if timeout >= 50:
+        player.kill()
+        running=False
+
 
 
     # Update the display
@@ -103,4 +116,4 @@ while running:
     clock.tick(FRAMERATE)
 
 
-time.sleep(1.5)
+#time.sleep(1.5)

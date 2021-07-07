@@ -6,17 +6,18 @@ import numpy as np
 import os
 import tensorflow as tf
 
+
 print('************* STARTING PPTRAIN ***************')
 #tf.debugging.set_log_device_placement(True)
-print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
-print("*********************************************")
+#print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+#print("*********************************************")
 
 PATH_DATA = "RL/agents/"
 
 init_time_start = time.time()
 game = pingpongRL.Game()
 game.reset()
-agent = RLagent.Agent(action_space=np.array([0,1]))
+agent = RLagent.Agent(action_space=np.array([0, 1, 2]))
 print(f"init time = {time.time()-init_time_start: .2f}")
 
 
@@ -40,6 +41,7 @@ def train(agent, game, episodes=100):
         "ball_yspeed_max": objects.BALL_YSPEED_MAX,
         "ball_yspeed_increase": objects.BALL_YSPEED_INCREASE
         }
+
     print(f"folder created: {folder_name}")
     pickle.dump(settings, open(f"{folder_name}/settings.p", 'wb'))
 
@@ -92,7 +94,7 @@ def train(agent, game, episodes=100):
 
         episode_time = time.time() - episode_start_time
         overhead_time = episode_time - action_time - step_time - learn_time
-        print(f"\tEpisode time = {episode_time: .2f}, action time = {action_time: .2f}, step time = {step_time: .2f}, learn_time = {learn_time: .2f}, overhead = {overhead_time: .1f}")
+        #print(f"\tEpisode time = {episode_time: .2f}, action time = {action_time: .2f}, step time = {step_time: .2f}, learn_time = {learn_time: .2f}, overhead = {overhead_time: .1f}")
 
         
         pickle.dump(agent.memory, open(f'{folder_name}/memory.p', 'wb'))
@@ -125,15 +127,12 @@ def human_instruction(agent, game, episodes=1):
         
         agent.learn_post_episode()
 
-
-
     return agent
 
 
 
 # MAIN:
-#agent = human_instruction(agent, game)
-#with tf.device('/device:GPU:0'):
-train(agent, game, episodes=100)
+agent = human_instruction(agent, game, episodes=3)
+train(agent, game, episodes=500)
 
 

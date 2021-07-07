@@ -21,7 +21,7 @@ class Player(pygame.sprite.Sprite):
                 SCREEN_HEIGHT,
             )
         )
-        self.speed = 10
+        self.speed = RACKET_SPEED
 
     # Move the sprite based on user keypresses
     def update(self, pressed_keys):
@@ -31,17 +31,19 @@ class Player(pygame.sprite.Sprite):
             self.rect.move_ip(self.speed, 0)
 
         # Keep player on the screen
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.right > SCREEN_WIDTH:
-            self.rect.right = SCREEN_WIDTH
+        # if self.rect.left < 0:
+        #     self.rect.left = 0
+        # if self.rect.right > SCREEN_WIDTH:
+        #     self.rect.right = SCREEN_WIDTH
         
     
     def updateRL(self, action):
         if action == 0: #left
             self.rect.move_ip(-self.speed, 0)
-        else: #right
+        elif action == 1: #right
             self.rect.move_ip(self.speed, 0)
+        #else:
+
 
         # Keep player on the screen
         if self.rect.left < 0:
@@ -74,7 +76,7 @@ class Ball(pygame.sprite.Sprite):
                 10,
             )
         )
-        self.xspeed = random.randint(-5,5)
+        self.xspeed = random.randint(3,10)
         self.yspeed = BALL_YSPEED_START
 
     # Move the sprite based on speed
@@ -97,15 +99,15 @@ class Ball(pygame.sprite.Sprite):
         if self.yspeed > BALL_YSPEED_MAX:
             self.yspeed = BALL_YSPEED_MAX
 
-        if random.randint(0,1) == 0:
-            self.xspeed += -1
-        else:
-            self.xspeed += 1
+        # if random.randint(0,1) == 0:
+        #     self.xspeed += -1
+        # else:
+        #     self.xspeed += 1
 
-        if self.xspeed > 20:
-            self.xspeed = 20
-        elif self.xspeed < -20:
-            self.xspeed = -20
+        # if self.xspeed > 20:
+        #     self.xspeed = 20
+        # elif self.xspeed < -20:
+        #     self.xspeed = -20
 
 
 class Score(pygame.sprite.Sprite):

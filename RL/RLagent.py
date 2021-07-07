@@ -9,7 +9,7 @@ import math
 
 class Agent(object):
     """The world's simplest agent!""" #0.99, 0.98
-    def __init__(self, action_space, gamma=1.0, epsilon=1.0, epsilon_min=0.01, epsilon_step_decay=0.9925, epsilon_episode_decay=0.98, alpha=0.01, alpha_decay=0.01, batch_size=64, model=None):
+    def __init__(self, action_space, state_space=6, gamma=0.99, epsilon=1.0, epsilon_min=0.01, epsilon_step_decay=0.9925, epsilon_episode_decay=0.98, alpha=0.01, alpha_decay=0.01, batch_size=512, model=None):
         """ action =[left, right] """
         self.action_space = action_space # [left, right] left=0, right=1 {np.array([0,1])}
         self.memory = deque(maxlen=1000000) # saving history of episodes. used for training
@@ -19,7 +19,7 @@ class Agent(object):
         self.epsilon_min = epsilon_min # decays to min value
         self.batch_size = batch_size # batch size used for training
         self.gamma = gamma # discount rate for reward
-        self.win_ticks = 20 # av score to complete
+        self.win_ticks = 10 # av score to complete
         self.loss_history = deque(maxlen=1000)
         self.scores = deque(maxlen=1000)
         
@@ -27,9 +27,9 @@ class Agent(object):
             self.model = model
         else:
             self.model = tf.keras.models.Sequential()
-            self.model.add(tf.keras.layers.Dense(24, input_dim=6, activation='tanh')) # input the 5 dimensions of the state
+            self.model.add(tf.keras.layers.Dense(24, input_dim=state_space, activation='tanh')) # input the 5 dimensions of the state
             self.model.add(tf.keras.layers.Dense(48, activation='tanh'))
-            self.model.add(tf.keras.layers.Dense(2, activation='linear')) # output the Q-values (value function) for the two actions
+            self.model.add(tf.keras.layers.Dense(len(action_space), activation='linear')) # output the Q-values (value function) for the two actions
 
             optimizer=keras.optimizers.Adam(learning_rate=alpha, decay=alpha_decay)
             loss = keras.losses.MeanSquaredError()

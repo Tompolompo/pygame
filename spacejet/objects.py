@@ -15,7 +15,10 @@ FIGPATH = "C:/Users/tomas/Desktop/summer projects/game/spacejet/figs/"
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
+        self.width = 50
+        self.height = 50
         self.surf = pygame.image.load(f"{FIGPATH}jet.png").convert()
+        self.surf = pygame.transform.scale(self.surf, (self.width, self.height))
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(
             center=(
@@ -23,7 +26,7 @@ class Player(pygame.sprite.Sprite):
                 SCREEN_HEIGHT,
             )
         )
-        self.speed = 10
+        self.speed = 50
 
     # Move the sprite based on user keypresses
     def update(self, pressed_keys):
@@ -46,14 +49,14 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom >= SCREEN_HEIGHT:
             self.rect.bottom = SCREEN_HEIGHT
     
-    def updateRL(self, actions):
-        if actions[0]: #up
+    def updateRL(self, action):
+        if action == 0: #up
             self.rect.move_ip(0, -self.speed)
-        if actions[1]: #down
+        if action == 1: #down
             self.rect.move_ip(0, self.speed)
-        if actions[2]: #left
+        if action == 2: #left
             self.rect.move_ip(-self.speed, 0)
-        if actions[3]: #right
+        if action == 3: #right
             self.rect.move_ip(self.speed, 0)
 
         # Keep player on the screen
@@ -94,14 +97,14 @@ class Price(pygame.sprite.Sprite):
     def __init__(self):
         super(Price, self).__init__()
         self.height = 50
-        self.width = 20
+        self.width = 50
         self.surf = pygame.image.load(f"{FIGPATH}banana.png").convert()
         self.surf = pygame.transform.scale(self.surf, (self.width, self.height))
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(
             center=(
                 random.randint(0, SCREEN_WIDTH-self.width),
-                random.randint(int(SCREEN_HEIGHT/3), SCREEN_HEIGHT-self.height),
+                self.height,
             )
         )
         
@@ -111,14 +114,14 @@ class Price(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect(
             center=(
                 random.randint(0, SCREEN_WIDTH-self.width),
-                random.randint(int(SCREEN_HEIGHT/3), SCREEN_HEIGHT-self.height),
+                random.randint(self.height, SCREEN_HEIGHT-self.height),
             )
         )
 
 class Score(pygame.sprite.Sprite):
     def __init__(self):
         super(Score, self).__init__()
-        self.myFont = pygame.font.Font(f"{FIGPATH}AtariClassic.ttf", 30)
+        self.myFont = pygame.font.Font(f"{FIGPATH}AtariClassic.ttf", 20)
         self.white = (255,255,255)
         self.score = 0
         ### pass a string to myFont.render
