@@ -17,7 +17,7 @@ PATH_DATA = "RL/agents/"
 init_time_start = time.time()
 game = pingpongRL.Game()
 game.reset()
-agent = RLagent.Agent(action_space=np.array([0, 1, 2]))
+agent = RLagent.Agent(action_space=np.array([0, 1]))
 print(f"init time = {time.time()-init_time_start: .2f}")
 
 
@@ -78,7 +78,7 @@ def train(agent, game, episodes=100):
 
         
         agent.scores.append(game.score.score)
-        mean_scores = np.mean(agent.scores)
+        mean_scores = np.mean(list(agent.scores)[-100:])
         print(f"Epsiode={episode}, last score = {game.score.score}, mean score = {mean_scores: .2f}")
         
         if mean_scores > agent.win_ticks and episode > 100: # if average score is over win_ticks for past 100 rounds
@@ -132,7 +132,7 @@ def human_instruction(agent, game, episodes=1):
 
 
 # MAIN:
-agent = human_instruction(agent, game, episodes=3)
+#agent = human_instruction(agent, game, episodes=3)
 train(agent, game, episodes=500)
 
 

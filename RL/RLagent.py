@@ -8,8 +8,8 @@ import numpy as np
 import math
 
 class Agent(object):
-    """The world's simplest agent!""" #0.99, 0.98
-    def __init__(self, action_space, state_space=6, gamma=0.99, epsilon=1.0, epsilon_min=0.01, epsilon_step_decay=0.9925, epsilon_episode_decay=0.98, alpha=0.01, alpha_decay=0.01, batch_size=512, model=None):
+     #0.99, 0.98
+    def __init__(self, action_space, state_space=6, gamma=0.99, epsilon=1.0, epsilon_min=0.01, epsilon_step_decay=0.9925, epsilon_episode_decay=0.98, alpha=0.05, alpha_decay=0.01, batch_size=64, model=None):
         """ action =[left, right] """
         self.action_space = action_space # [left, right] left=0, right=1 {np.array([0,1])}
         self.memory = deque(maxlen=1000000) # saving history of episodes. used for training
@@ -19,7 +19,7 @@ class Agent(object):
         self.epsilon_min = epsilon_min # decays to min value
         self.batch_size = batch_size # batch size used for training
         self.gamma = gamma # discount rate for reward
-        self.win_ticks = 10 # av score to complete
+        self.win_ticks = 25 # av score to complete
         self.loss_history = deque(maxlen=1000)
         self.scores = deque(maxlen=1000)
         
@@ -54,7 +54,7 @@ class Agent(object):
         minibatch = random.sample(self.memory, min(len(self.memory), self.batch_size))
         for state, action, reward, next_state, done in minibatch:
             y_target = self.model.predict(state) # q value for action 0 and 1
-            y_target[0][action] = reward if done else self.gamma * np.max(self.model.predict(next_state)[0])
+            y_target[0][action] = reward if done else reward + self.gamma * np.max(self.model.predict(next_state)[0])
             x_batch.append(state[0])
             y_batch.append(y_target[0])
             

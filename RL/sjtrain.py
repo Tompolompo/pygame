@@ -48,6 +48,7 @@ def train(agent, game, episodes=100):
         game.reset()
         state = game.initial_state()
         state = state.reshape([1,4])
+        #print(f"state = {state}")
 
         i=0
         done=False
@@ -67,6 +68,7 @@ def train(agent, game, episodes=100):
             next_state = next_state.reshape([1,4])
             agent.remember(state, action, reward, next_state, done) # record
             state = next_state
+            #print(f"state = {state}")
             i+=1
 
         

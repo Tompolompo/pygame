@@ -71,10 +71,10 @@ class Game():
 
     def initial_state(self):
         state = np.array([[
-            self.player.rect.centerx,
-            self.player.rect.centery,
-            self.price.rect.centerx,
-            self.price.rect.centery
+            float(self.player.rect.centerx),
+            float(self.player.rect.centery),
+            float(self.price.rect.centerx),
+            float(self.price.rect.centery)
         ]])
 
         return self.scale_state(state)
@@ -124,20 +124,21 @@ class Game():
         if pygame.sprite.collide_rect(self.player, self.price):
             self.score.update()
             self.price.update()
-            reward = self.timeout/TIMEOUT * 10
+            reward = self.timeout/TIMEOUT * 100
             self.timeout = TIMEOUT
         else:
             self.timeout -= 1
-            reward = 1/(np.abs(self.player.rect.centerx - self.price.rect.centerx)/SCREEN_WIDTH + np.abs(self.player.rect.centery - self.price.rect.centery)/SCREEN_HEIGHT)
+            reward = 1 / ( (np.abs(self.player.rect.centerx - self.price.rect.centerx)/SCREEN_WIDTH)**2 \
+                + (np.abs(self.player.rect.centery - self.price.rect.centery)/SCREEN_HEIGHT)**2)
 
         if self.timeout < 0:
             self.done = True
             self.player.kill()
             self.score.kill()
             self.price.kill()
-            reward = 0
+            reward = -10
 
-        # self.rewards.append(round(reward,2))
+        self.rewards.append(round(reward,2))
         # if self.done:
         #     print(self.rewards)
         #     self.rewards = []
@@ -149,11 +150,14 @@ class Game():
         #self.clock.tick(FRAMERATE)
 
         state = np.array([[
-            self.player.rect.centerx,
-            self.player.rect.centery,
-            self.price.rect.centerx,
-            self.price.rect.centery
+            float(self.player.rect.centerx),
+            float(self.player.rect.centery),
+            float(self.price.rect.centerx),
+            float(self.price.rect.centery)
             ]])
+        
+        #print(f"State : {state}")
+        #print(f"Reward : {reward}")
 
         return self.scale_state(state), reward, self.done 
 

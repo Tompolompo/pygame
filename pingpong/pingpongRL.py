@@ -43,16 +43,17 @@ class Game():
         self.all_sprites.add(self.score)
 
         self.done = False
+        self.rewards = []
 
     
     def initial_state(self):
         state = np.array([[
-            self.player.rect.left,
-            self.player.rect.right, 
-            self.ball.rect.centerx, 
-            self.ball.rect.centery, 
-            self.ball.xspeed, 
-            self.ball.yspeed
+            float(self.player.rect.left),
+            float(self.player.rect.right), 
+            float(self.ball.rect.centerx), 
+            float(self.ball.rect.centery), 
+            float(self.ball.xspeed), 
+            float(self.ball.yspeed)
         ]])
 
         return self.scale_state(state)
@@ -89,11 +90,13 @@ class Game():
         # Update the player sprite based on user keypresses
         self.player.updateRL(action)
         dead = self.ball.update()
+
+        reward=0
         if dead:
             self.player.kill()
             self.ball.kill()
             self.done = True
-            reward = 0
+            reward = -100
 
         self.screen.fill((0, 0, 0))
 
@@ -104,9 +107,14 @@ class Game():
             self.ball.pong() 
             self.score.update()
             self.player.update_racket()
-            reward = 1
+            reward = 10
         else:
-            reward = 0 # OBS: TEST NON SPARSE REWARDS
+            if self.ball.rect.centerx > self.player.rect.left and self.ball.rect.centerx < self.player.rect.right:
+                reward = 1
+            
+            # OBS: TEST NON SPARSE REWARDS
+            
+        self.rewards.append(reward)
             
         # Update the display
         pygame.display.flip()
@@ -115,13 +123,20 @@ class Game():
         #self.clock.tick(FRAMERATE)
 
         state = np.array([[
-            self.player.rect.left,
-            self.player.rect.right, 
-            self.ball.rect.centerx, 
-            self.ball.rect.centery, 
-            self.ball.xspeed, 
-            self.ball.yspeed
+            float(self.player.rect.left),
+            float(self.player.rect.right), 
+            float(self.ball.rect.centerx), 
+            float(self.ball.rect.centery), 
+            float(self.ball.xspeed), 
+            float(self.ball.yspeed)
         ]])
+
+        #print(f"State : {self.scale_state(state)}")
+        #print(f"Reward : {reward}")
+
+        # if self.done:
+        #     print(self.rewards)
+        #     self.rewards = []
 
         if human_feedback:
             self.clock.tick(FRAMERATE)
